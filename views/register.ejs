@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Register</title>
+    <%- include('partials/cdn') %> 
+    <style>
+        body {
+            background-color: #121212 !important;
+            color: #ddd !important;
+        }
+        .card {
+            background-color: #1e1e1e !important;
+            color: #ddd !important;
+            border: none !important;
+        }
+        .form-control {
+            background-color: #2a2a2a !important;
+            color: #ddd !important;
+            border: 1px solid #444 !important;
+        }
+        .btn-primary {
+            background-color: #007bff !important;
+            border-color: #007bff !important;
+        }
+    </style>
+</head>
+<body class="d-flex align-items-center justify-content-center vh-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card shadow-lg">
+                    <div class="card-body">
+                        <h3 class="text-center text-primary">Register</h3>
+
+                        
+                        <% if (error) { %>
+                            <script>
+                                alert("<%= error %>");
+                            </script>
+                        <% } %>
+
+                        <form action="/register" method="POST">
+                            <div class="mb-3">
+                                <label class="form-label">First Name</label>
+                                <input type="text" name="first_name" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" name="last_name" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Password</label>
+                                <input type="password" name="password" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Contact Number</label>
+                                <input type="text" name="contact_number" class="form-control" required 
+                                       pattern="\d{10}" title="Enter a 10-digit phone number">
+                            </div>
+                            
+
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Role</label>
+                                <select name="role" id="role" class="form-control" required>
+                                    <option value="">-- Select Role --</option>
+                                    <option value="Helpdesk Operator">Helpdesk Operator</option>
+                                    <option value="IT Technician">IT Technician</option>
+                                    <option value="Office Manager">Office Manager</option>
+                                </select>
+                            </div>
+
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Specialization</label>
+                                <select name="specialization" id="specialization" class="form-control" disabled required>
+                                    <option value="">-- Select Specialization --</option>
+                                    <% allowedSpecializations.forEach(specialization => { %>
+                                        <option value="<%= specialization %>"><%= specialization %></option>
+                                    <% }) %>
+                                </select>
+                            </div>
+
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Office</label>
+                                <select name="office_id" class="form-control" required>
+                                    <option value="">-- Select Office --</option>
+                                    <% offices.forEach(office => { %>
+                                        <option value="<%= office.office_id %>"><%= office.office_name %></option>
+                                    <% }) %>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">Register</button>
+                        </form>
+
+                        <div class="text-center mt-3">
+                            <p>Already have an account? <a href="/login">Login</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const roleSelect = document.getElementById("role");
+            const specializationSelect = document.getElementById("specialization");
+
+            roleSelect.addEventListener("change", function () {
+                if (this.value === "IT Technician") {
+                    specializationSelect.disabled = false;
+                } else {
+                    specializationSelect.disabled = true;
+                    specializationSelect.value = ""; 
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

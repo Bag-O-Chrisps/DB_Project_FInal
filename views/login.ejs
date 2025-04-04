@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login</title>
+    <%- include('partials/cdn') %> 
+    <style>
+        body {
+            background-color: #121212 !important; 
+            color: #ddd !important; 
+        }
+        .card {
+            background-color: #1e1e1e !important; 
+            color: #ddd !important;
+            border: none !important; 
+        }
+        .form-control {
+            background-color: #2a2a2a !important;
+            color: #ddd !important;
+            border: 1px solid #444 !important; 
+        }
+        .form-control:focus {
+            background-color: #2a2a2a !important;
+            color: #ddd !important;
+            border-color: #666 !important;
+            box-shadow: none !important; /
+        }
+        .btn-primary {
+            background-color: #007bff !important; 
+            border-color: #007bff !important;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3 !important;
+            border-color: #0056b3 !important;
+        }
+        a {
+            color: #ddd !important; 
+        }
+        a:hover {
+            color: #bbb !important; 
+        }
+    </style>
+</head>
+<body class="d-flex align-items-center justify-content-center vh-100">
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card shadow-lg">
+                    <div class="card-body">
+                        <h3 class="text-center text-primary">Login</h3> <!-- Only title is blue -->
+
+                        
+                        <% if (error) { %>
+                            <script>
+                                alert("<%= error %>");
+                            </script>
+                        <% } %>
+                        
+
+                        <form action="/login" method="POST">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" name="email" id="email" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" name="password" id="password" class="form-control" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">Login</button> 
+                        </form>
+
+                        <div class="text-center mt-3">
+                            <p>Don't have an account? <a href="/register">Register</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

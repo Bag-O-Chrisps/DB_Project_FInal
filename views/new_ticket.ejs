@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create New Ticket</title>
+    <%- include('partials/cdn') %> 
+
+    <style>
+        body {
+            background-color: #121212;
+            color: #ddd;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .card {
+            background-color: #1e1e1e;
+            color: #ddd;
+            border-radius: 1rem;
+            border: 1px solid #333;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+        }
+
+        h2 {
+            color: #0d6efd;
+        }
+
+        .form-control {
+            background-color: #2a2a2a;
+            color: #ddd;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .btn {
+            border-radius: 8px;
+            padding: 10px;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+    </style>
+</head>
+<body>
+
+    <%- include('partials/navbar') %> 
+
+    <div class="container mt-4">
+        <h2>Create New Ticket</h2>
+        
+        <% if (error) { %>
+            <div class="alert alert-danger text-center">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <div class="card">
+            <form action="/tickets/new" method="POST">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Caller ID (4-digit)</label>
+                        <input type="text" name="caller_id" class="form-control" required pattern="\d{4}" maxlength="4">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Priority</label>
+                        <select name="priority" class="form-control" required>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Category</label>
+                        <select name="category" id="category" class="form-control" required>
+                            <option value="">-- Select Category --</option>
+                            <option value="Office Hardware">Office Hardware</option>
+                            <option value="Network Hardware">Network Hardware</option>
+                            <option value="Software">Software</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Equipment Name</label>
+                        <input type="text" name="equipment_name" class="form-control" placeholder="Enter Equipment Name" required>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Purchase Date</label>
+                        <input type="date" name="purchase_date" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Warranty Expiry</label>
+                        <input type="date" name="warranty_expiry" class="form-control">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Office Location</label>
+                        <select name="office_id" class="form-control" required>
+                            <option value="">-- Select Office --</option>
+                            <% if (Array.isArray(offices)) { %>
+                                <% offices.forEach(office => { %>
+                                    <option value="<%= office.office_id %>"><%= office.office_name %></option>
+                                <% }) %>
+                            <% } else { %>
+                                <option value="">No offices available</option>
+                            <% } %>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Issue Description</label>
+                    <textarea name="issue_description" class="form-control" rows="3" required></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Assign Technician</label>
+                    <select name="assigned_technician_id" id="technician" class="form-control" required>
+                        <option value="">-- Select Technician --</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Create Ticket</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const categorySelect = document.getElementById("category");
+            const officeSelect = document.querySelector("select[name='office_id']");
+            const technicianSelect = document.getElementById("technician");
+
+            async function updateTechnicians() {
+                const selectedCategory = categorySelect.value;
+                const selectedOffice = officeSelect.value;
+                technicianSelect.innerHTML = '<option value="">-- Select Technician --</option>';
+
+                if (selectedCategory && selectedOffice) {
+                    try {
+                        const response = await fetch(`/tickets/getTechnicians?category=${encodeURIComponent(selectedCategory)}&office=${encodeURIComponent(selectedOffice)}`);
+                        const technicians = await response.json();
+
+                        if (technicians.length > 0) {
+                            technicians.sort((a, b) => a.ticket_count - b.ticket_count); 
+                            
+                            technicianSelect.innerHTML = ""; 
+                            
+                            technicians.forEach(tech => {
+                                const option = document.createElement("option");
+                                option.value = tech.employee_id;
+                                option.textContent = `${tech.first_name} ${tech.last_name} - ${tech.ticket_count} tickets`;
+                                technicianSelect.appendChild(option);
+                            });
+                        }
+                    } catch (error) {
+                        console.error("Error fetching technicians:", error);
+                    }
+                }
+
+            }
+
+            categorySelect.addEventListener("change", updateTechnicians);
+            officeSelect.addEventListener("change", updateTechnicians);
+        });
+    </script>
+
+</body>
+</html>

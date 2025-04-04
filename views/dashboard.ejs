@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <%- include('partials/cdn') %>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ddd;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .card {
+            background-color: #1e1e1e;
+            color: #ddd;
+            border-radius: 1rem;
+            border: 1px solid #333;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+        }
+        h2, h5 {
+            color: #0d6efd;
+        }
+        .btn {
+            border-radius: 0.5rem;
+            padding: 10px 20px;
+        }
+        .btn-primary { background-color: #0d6efd; border-color: #0d6efd; }
+        .btn-secondary { background-color: #6c757d; border-color: #6c757d; }
+        .error-box {
+            background-color: #c0392b;
+            color: #fff;
+            padding: 10px;
+            border-radius: 0.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <%- include('partials/navbar') %>
+
+    <div class="container mt-4">
+        <h2>Dashboard</h2>
+    
+        <div class="card mb-4">
+            <% if (employeeInfo) { %>
+                <h5>Welcome, <%= employeeInfo.first_name %> <%= employeeInfo.last_name %>!</h5>
+                <p><strong>Office:</strong> <%= employeeInfo.office_name %></p>
+                <p><strong>Contact Number:</strong> <%= employeeInfo.contact_number || 'N/A' %></p>
+                <p><strong>Start Date:</strong> <%= employeeInfo.start_date ? new Date(employeeInfo.start_date).toISOString().split('T')[0] : 'N/A' %></p>
+
+
+            <% } else { %>
+                <div class="error-box">User information not found.</div>
+            <% } %>
+        </div>
+    
+        <% if (user.role === 'Helpdesk Operator') { %>
+            <div class="card mb-4">
+                <h5>Office Ticket Overview</h5>
+                <p><strong>Open Tickets in Office:</strong> <%= ticketStats.open_tickets || 0 %></p>
+            </div>
+    
+            <div class="card mb-4">
+                <h5>Tickets Assigned to IT Technicians</h5>
+                <% if (assignedTickets.length) { %>
+                    <ul>
+                        <% assignedTickets.forEach(ticket => { %>
+                            <li>
+                                <strong>ID:</strong> <%= ticket.ticket_id %> |
+                                <strong>Issue:</strong> <%= ticket.issue_description %> |
+                                <strong>Status:</strong> <%= ticket.status %> |
+                                <strong>Priority:</strong> <%= ticket.priority %> |
+                                <strong>Assigned Technician:</strong> <%= ticket.technician_name %>
+                            </li>
+                        <% }) %>
+                    </ul>
+                <% } else { %>
+                    <p>No tickets assigned yet.</p>
+                <% } %>
+            </div>
+        <% } %>
+    
+        <% if (user.role === 'IT Technician') { %>
+            <div class="card">
+                <h5>Your Assigned Tickets</h5>
+                <% if (assignedTickets.length) { %>
+                    <ul>
+                        <% assignedTickets.forEach(ticket => { %>
+                            <li>
+                                <strong>ID:</strong> <%= ticket.ticket_id %> |
+                                <strong>Issue:</strong> <%= ticket.issue_description %> |
+                                <strong>Status:</strong> <%= ticket.status %> |
+                                <strong>Priority:</strong> <%= ticket.priority %>
+                            </li>
+                        <% }) %>
+                    </ul>
+                <% } else { %>
+                    <p>No assigned tickets found.</p>
+                <% } %>
+            </div>
+        <% } %>
+    </div>
+    
+
+</body>
+</html>

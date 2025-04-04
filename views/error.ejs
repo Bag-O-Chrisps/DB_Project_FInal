@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - Something Went Wrong</title>
+    <%- include('partials/cdn') %> 
+    <style>
+        body {
+            background-color: #121212;
+            color: #ddd;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+
+        .error-container {
+            background-color: #1e1e1e;
+            border: 2px solid #dc3545;
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(255, 0, 0, 0.2);
+        }
+
+        .error-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #dc3545;
+        }
+
+        .error-message {
+            margin-bottom: 20px;
+            color: #bbb;
+        }
+
+        .btn-home {
+            background-color: #0d6efd;
+            color: #fff;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .btn-home:hover {
+            background-color: #0b5ed7;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1 class="error-title">Oops!</h1>
+        <p class="error-message">
+            <%= typeof errorMessage !== 'undefined' ? errorMessage : "Something went wrong. Please try again later." %>
+        </p>        
+        <a href="/" class="btn-home">Return to Home</a>
+    </div>
+</body>
+</html>

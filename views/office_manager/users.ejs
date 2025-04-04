@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users Management</title>
+    <%- include('partials/cdn2') %>
+    <%- include('partials/manager_bar') %>
+
+    <style>
+        body { background-color: #121212; color: #ddd; }
+        
+        .user-section { 
+            background-color: #1e1e1e; 
+            border-radius: 10px; 
+            padding: 20px; 
+            margin-bottom: 30px; 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6); 
+        }
+        .user-table { width: 100%; border-collapse: collapse; }
+        .user-table th, .user-table td { 
+            border: 1px solid #444; 
+            padding: 12px; 
+            text-align: left; 
+        }
+        .user-table th { background-color: #0d6efd; color: #fff; }
+        .text-center { text-align: center; }
+        .inactive { color: #dc3545; font-weight: bold; }
+        .active { color: #28a745; font-weight: bold; }
+        .btn-danger { 
+            background-color: #dc3545; 
+            border: none; 
+            border-radius: 5px; 
+            padding: 5px 10px; 
+            cursor: pointer; 
+            color: #fff;
+        }
+        .btn-danger:hover { background-color: #bb2d3b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center mb-4">User Management</h2>
+
+        <div class="user-section">
+            <h3>Employees in Your Location</h3>
+            <% if (users.length > 0) { %>
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>Employee ID</th>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% users.forEach(user => { %>
+                            <tr>
+                                <td><%= user.employee_id %></td>
+                                <td><%= user.employee_name %></td>
+                                <td><%= user.role %></td>
+                                <td class="<%= user.is_active ? 'active' : 'inactive' %>">
+                                    <%= user.is_active ? 'Active' : 'Inactive' %>
+                                </td>
+                                <td>
+                                    <% if (user.is_active) { %>
+                                        <form action="/office_manager/fire-employee/<%= user.employee_id %>" method="POST"
+                                            onsubmit="return confirm('Are you sure you want to fire this employee? This action cannot be undone.');">
+                                            <button type="submit" class="btn btn-danger">Fire</button>
+                                        </form>
+                                    <% } else { %>
+                                        <span class="text-muted">N/A</span>
+                                    <% } %>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <p class="text-center">No employees found in your location.</p>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>

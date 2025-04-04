@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports</title>
+    <%- include('partials/cdn2') %>
+    <%- include('partials/manager_bar') %>
+
+    <style>
+        body { 
+            background-color: #121212; 
+            color: #ddd; 
+            font-family: 'Segoe UI', sans-serif; 
+        }
+        .report-section { 
+            background-color: #1e1e1e; 
+            border: 1px solid #333; 
+            border-radius: 10px; 
+            padding: 20px; 
+            margin-bottom: 30px; 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6); 
+        }
+        .report-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+        }
+        .report-table th, .report-table td { 
+            border: 1px solid #333; 
+            padding: 10px; 
+            text-align: left; 
+        }
+        .report-table th { 
+            background-color: #0d6efd; 
+            color: #fff; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center mb-4">Reports Overview</h2>
+
+        <div class="report-section">
+            <h3>Monthly Summary Report</h3>
+            <% if (monthlySummary.length > 0) { %>
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Total Calls</th>
+                            <th>Open Cases</th>
+                            <th>Closed Cases</th>
+                            <th>Total Time Spent (hrs)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% monthlySummary.forEach(report => { %>
+                            <tr>
+                                <td><%= new Date(report.month).toLocaleDateString() %></td>
+                                <td><%= report.total_calls %></td>
+                                <td><%= report.open_cases %></td>
+                                <td><%= report.closed_cases %></td>
+                                <td><%= report.total_hours_spent ? Number(report.total_hours_spent).toFixed(2) : '0.00' %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <p>No data available for monthly summary report.</p>
+            <% } %>
+        </div>
+
+        <div class="report-section">
+            <h3>Technician Job Summary</h3>
+            <% if (technicianSummary.length > 0) { %>
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Technician</th>
+                            <th>Total Jobs</th>
+                            <th>Open Cases</th>
+                            <th>Closed Cases</th>
+                            <th>Total Hours Spent</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% technicianSummary.forEach(tech => { %>
+                            <tr>
+                                <td><%= tech.technician_name %></td>
+                                <td><%= tech.total_jobs %></td>
+                                <td><%= tech.open_cases %></td>
+                                <td><%= tech.closed_cases %></td>
+                                <td><%= tech.total_hours_spent ? Number(tech.total_hours_spent).toFixed(2) : '0.00' %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <p>No data available for technician summary report.</p>
+            <% } %>
+        </div>
+
+        <div class="report-section">
+            <h3>Office Job Summary</h3>
+            <% if (officeSummary.length > 0) { %>
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Office</th>
+                            <th>Hardware Faults</th>
+                            <th>Software Faults</th>
+                            <th>Total Hours Spent</th>
+                            <th>Assigned Technicians</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% officeSummary.forEach(office => { %>
+                            <tr>
+                                <td><%= office.office_name %></td>
+                                <td><%= office.hardware_faults %></td>
+                                <td><%= office.software_faults %></td>
+                                <td><%= office.total_hours_spent ? Number(office.total_hours_spent).toFixed(2) : '0.00' %></td>
+                                <td><%= office.unique_technicians %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <p>No data available for office summary report.</p>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>
